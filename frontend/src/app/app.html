@@ -1,0 +1,1627 @@
+<!-- ==========================================================================
+     ROYAL HOTELS — MAIN APPLICATION TEMPLATE
+     "WHERE COMFORT MEETS LUXURY"
+     ========================================================================== -->
+
+@if (!isAdminRoute) {
+<div class="site-wrapper">
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <header class="luxury-header" id="header">
+    <div class="header-container">
+      
+      <!-- Brand Logo & Identity -->
+      <a class="brand-link" (click)="navigateToHome()">
+        <img src="logo.png" alt="Royal Hotels Logo" class="brand-logo" />
+        <div class="brand-text">
+          <span class="brand-title">{{ hotelName }}</span>
+          <span class="brand-tagline">{{ tagline }}</span>
+        </div>
+      </a>
+
+      <!-- Primary Navigation -->
+      <nav class="nav-menu">
+        <a (click)="navigateToHome()" class="nav-link" [class.active]="currentView === 'home'">Home</a>
+        <a (click)="scrollToSection('rooms-section')" class="nav-link">Rooms &amp; Suites</a>
+        <a (click)="startBooking()" class="nav-link" [class.active]="currentView === 'booking' || currentView === 'payment' || currentView === 'confirmation'">Booking</a>
+        <a (click)="scrollToSection('facilities-section')" class="nav-link">Services &amp; Dining</a>
+        <a (click)="scrollToSection('about-section')" class="nav-link">About Us</a>
+        <a (click)="scrollToSection('footer')" class="nav-link">Contact</a>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="header-actions">
+        <a href="tel:+919876543210" class="phone-link">
+          <svg class="phone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>{{ phone }}</span>
+        </a>
+        <button class="btn-book-nav" (click)="startBooking()">
+          <svg class="calendar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          BOOK NOW
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= VIEW 1: HOMEPAGE ================= -->
+  @if (currentView === 'home') {
+
+    <!-- HERO SECTION -->
+    <section class="hero-section" id="hero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        
+        <div class="royal-kicker">
+          <span class="kicker-line"></span>
+          <span class="kicker-text">WELCOME TO ROYAL HOTELS</span>
+          <span class="kicker-line"></span>
+        </div>
+
+        <h1 class="hero-heading">Your Royal Escape Awaits</h1>
+        
+        <div class="royal-ornament">
+          <span class="ornament-diamond">&#9670;</span>
+        </div>
+
+        <p class="hero-subtext">
+          Discover exceptional comfort, timeless elegance and thoughtful hospitality.
+        </p>
+
+        <div class="hero-cta-group">
+          <button class="btn-primary" (click)="startBooking(rooms[1])">
+            Book Your Stay
+            <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+          <button class="btn-secondary" (click)="scrollToSection('rooms-section')">
+            Explore Our Rooms
+          </button>
+        </div>
+
+        <!-- REFINED BOOKING SEARCH PANEL -->
+        <div class="booking-search-panel">
+          <div class="search-grid">
+            
+            <!-- Check-in -->
+            <div class="search-field">
+              <label class="field-label">CHECK-IN</label>
+              <div class="field-input-box">
+                <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <input type="date" [(ngModel)]="checkInDate" class="date-input" />
+              </div>
+            </div>
+
+            <!-- Check-out -->
+            <div class="search-field">
+              <label class="field-label">CHECK-OUT</label>
+              <div class="field-input-box">
+                <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <input type="date" [(ngModel)]="checkOutDate" class="date-input" />
+              </div>
+            </div>
+
+            <!-- Guests & Rooms -->
+            <div class="search-field">
+              <label class="field-label">GUESTS &amp; ROOMS</label>
+              <div class="field-input-box">
+                <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <select [(ngModel)]="guestsCount" class="select-input">
+                  <option value="1 Guest, 1 Room">1 Guest, 1 Room</option>
+                  <option value="2 Guests, 1 Room">2 Guests, 1 Room</option>
+                  <option value="3 Guests, 1 Room">3 Guests, 1 Room</option>
+                  <option value="4 Guests, 2 Rooms">4 Guests, 2 Rooms</option>
+                  <option value="Family Suite (5+ Guests)">Family (5+ Guests)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Room Category -->
+            <div class="search-field">
+              <label class="field-label">ROOM PREFERENCE</label>
+              <div class="field-input-box">
+                <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <select [(ngModel)]="roomCategory" class="select-input">
+                  <option value="All Categories">All Categories</option>
+                  <option value="Standard Room">Standard Room</option>
+                  <option value="Deluxe Room">Deluxe Room</option>
+                  <option value="Royal Suite">Royal Suite</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="search-btn-container">
+              <button class="btn-check-availability" (click)="onCheckAvailability()">
+                CHECK AVAILABILITY
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Search Status Notification -->
+          @if (searchResultMessage) {
+            <div class="search-result-toast">
+              <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>{{ searchResultMessage }}</span>
+            </div>
+          }
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- HIGHLIGHTS SECTION -->
+    <section class="highlights-section">
+      <div class="highlights-container">
+        @for (item of highlights; track item.title) {
+          <div class="highlight-item">
+            <div class="highlight-icon-circle">
+              @if (item.icon === 'bed') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"></path>
+                </svg>
+              }
+              @if (item.icon === 'utensils') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                  <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                  <line x1="6" y1="1" x2="6" y2="4"></line>
+                  <line x1="10" y1="1" x2="10" y2="4"></line>
+                  <line x1="14" y1="1" x2="14" y2="4"></line>
+                </svg>
+              }
+              @if (item.icon === 'spa') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M12 2a9 9 0 0 1 9 9c0 4.97-4.03 9-9 9s-9-4.03-9-9a9 9 0 0 1 9-9z"></path>
+                  <path d="M12 7c-2.5 3-2.5 7 0 10 2.5-3 2.5-7 0-10z"></path>
+                </svg>
+              }
+              @if (item.icon === 'support') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+                  <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+                </svg>
+              }
+            </div>
+            <div class="highlight-text">
+              <h4 class="highlight-title">{{ item.title }}</h4>
+              <p class="highlight-desc">{{ item.desc }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- ABOUT & HERITAGE STORY -->
+    <section class="about-section" id="about-section">
+      <div class="about-container">
+        <div class="section-tag-wrap">
+          <span class="gold-line"></span>
+          <span class="section-tag">ROYAL HOSPITALITY</span>
+          <span class="gold-line"></span>
+        </div>
+        <h2 class="section-title">Where Comfort Meets Luxury</h2>
+        <p class="about-lead">
+          Welcome to <strong>ROYAL HOTELS</strong>, where timeless grandeur harmonizes with state-of-the-art hospitality. 
+          Conceived as an idyllic sanctuary for the discerning traveller, our property blends regal heritage architectures, 
+          handcrafted furnishings, and warm, attentive service to create an unforgettable retreat.
+        </p>
+        <div class="stats-row">
+          <div class="stat-card">
+            <span class="stat-number">120+</span>
+            <span class="stat-label">Luxury Rooms &amp; Suites</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">5-Star</span>
+            <span class="stat-label">Heritage Experience</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Dedicated Butler Service</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Guest Satisfaction</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROOMS & SUITES SECTION -->
+    <section class="rooms-section" id="rooms-section">
+      <div class="section-header">
+        <div class="section-tag-wrap">
+          <span class="gold-line"></span>
+          <span class="section-tag">ROOMS &amp; SUITES</span>
+          <span class="gold-line"></span>
+        </div>
+        <h2 class="section-title">Choose Your Perfect Stay</h2>
+        <p class="section-subtitle">
+          Elegant rooms, premium comfort and exceptional service for a memorable stay.
+        </p>
+      </div>
+
+      <!-- ── LIVE ROOM DATA FROM JAVA BACKEND ─────────────────────────── -->
+
+      <!-- Loading state: shown while the initial page-load HTTP request is in flight -->
+      @if (isLoadingRooms) {
+        <div class="rooms-api-status">
+          <div class="api-spinner"></div>
+          <p class="api-status-msg">Loading live room availability from the database…</p>
+        </div>
+      }
+
+      <!-- Error state: shown if the backend is unreachable on page load -->
+      @if (!isLoadingRooms && roomsError) {
+        <div class="rooms-api-error">
+          <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <p>{{ roomsError }}</p>
+        </div>
+      }
+
+      <!--
+        MODE A — DATE-FILTERED SEARCH RESULTS
+        Shown after the user clicks CHECK AVAILABILITY.
+        availableRooms is non-null; each room in the list is confirmed
+        available by the MySQL date-overlap query.
+      -->
+      @if (!isLoadingRooms && availableRooms !== null) {
+
+        <!-- Search in-flight spinner -->
+        @if (isLoadingAvailability) {
+          <div class="rooms-api-status">
+            <div class="api-spinner"></div>
+            <p class="api-status-msg">Checking availability for {{ checkInDate }} &rarr; {{ checkOutDate }}&hellip;</p>
+          </div>
+        }
+
+        <!-- Availability API error (backend unreachable / bad dates) -->
+        @if (!isLoadingAvailability && availabilityError) {
+          <div class="rooms-api-error">
+            <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <p>{{ availabilityError }}</p>
+          </div>
+        }
+
+        <!-- Date-filtered room cards — every card here IS available for the chosen dates -->
+        @if (!isLoadingAvailability && !availabilityError && availableRooms!.length > 0) {
+          <div class="rooms-grid">
+            @for (avRoom of availableRooms!; track avRoom.roomId) {
+              <div class="room-card">
+
+                <div class="room-image-wrap">
+                  @if (avRoom.roomType === 'Standard') {
+                    <img src="images/standard-room.jpg" alt="Standard Room" class="room-image" />
+                  }
+                  @if (avRoom.roomType === 'Deluxe') {
+                    <img src="images/deluxe-room.jpg" alt="Deluxe Room" class="room-image" />
+                  }
+                  @if (avRoom.roomType === 'Suite') {
+                    <img src="images/royal-suite.jpg" alt="Royal Suite" class="room-image" />
+                  }
+
+                  <div class="room-price-badge">
+                    <span class="price-val">&#8377;{{ avRoom.pricePerNight | number }}</span>
+                    <span class="price-unit">/ night</span>
+                  </div>
+
+                  <!-- Confirmed available by MySQL date-overlap query -->
+                  <div class="room-status-badge status-available">AVAILABLE</div>
+                </div>
+
+                <div class="room-info">
+                  <h3 class="room-title">
+                    @if (avRoom.roomType === 'Suite') { Royal Suite }
+                    @else { {{ avRoom.roomType }} Room }
+                  </h3>
+
+                  <div class="room-specs">
+                    <div class="spec-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                        <line x1="9" y1="21" x2="9" y2="9"></line>
+                      </svg>
+                      <span>Room No. {{ avRoom.roomNumber }}</span>
+                    </div>
+                    <div class="spec-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                      </svg>
+                      <span>Up to {{ avRoom.capacity }} Guest{{ avRoom.capacity !== 1 ? 's' : '' }}</span>
+                    </div>
+                    <!-- Backend-calculated stay summary (nights + total price) -->
+                    <div class="spec-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      <span>{{ avRoom.numberOfNights }} night{{ avRoom.numberOfNights !== 1 ? 's' : '' }} &middot; &#8377;{{ avRoom.totalPrice | number }} total</span>
+                    </div>
+                  </div>
+
+                  <div class="room-amenities">
+                    <span class="amenity-chip">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                        <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                        <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                      </svg>
+                      Free Wi-Fi
+                    </span>
+                    <span class="amenity-chip">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                        <circle cx="12" cy="12" r="2"></circle>
+                      </svg>
+                      AC
+                    </span>
+                    <span class="amenity-chip">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+                        <polyline points="17 2 12 7 7 2"></polyline>
+                      </svg>
+                      TV
+                    </span>
+                    <span class="amenity-chip">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                      </svg>
+                      Work Desk
+                    </span>
+                  </div>
+
+                  <!-- Book Now always enabled: backend already confirmed availability -->
+                  <div class="card-actions">
+                    <button class="btn-outline-card"
+                            (click)="openRoomModal(rooms[avRoom.roomType === 'Suite' ? 2 : avRoom.roomType === 'Deluxe' ? 1 : 0])">
+                      View Details
+                    </button>
+                    <button class="btn-solid-card" (click)="startBooking(avRoom)">
+                      Book Now
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- No rooms available for selected dates -->
+        @if (!isLoadingAvailability && !availabilityError && availableRooms!.length === 0) {
+          <div class="rooms-api-status">
+            <p class="api-status-msg">
+              No rooms available for <strong>{{ checkInDate }}</strong> &rarr; <strong>{{ checkOutDate }}</strong>.
+              Please try different dates.
+            </p>
+            <button class="btn-check-availability" style="margin-top:1rem" (click)="clearAvailabilitySearch()">
+              View All Rooms
+            </button>
+          </div>
+        }
+
+      }
+
+      <!--
+        MODE B — INITIAL PAGE LOAD (no search yet)
+        Shows all rooms from the database with their static status column.
+        availableRooms is null (no search has been performed yet).
+      -->
+      @if (!isLoadingRooms && !roomsError && availableRooms === null) {
+
+        @if (apiRooms.length > 0) {
+          <div class="rooms-grid">
+            @for (apiRoom of apiRooms; track apiRoom.roomId) {
+              <div class="room-card">
+
+                <!-- Room Image area: use type-based image from local assets -->
+                <div class="room-image-wrap">
+                  @if (apiRoom.roomType === 'Standard') {
+                    <img src="images/standard-room.jpg" alt="Standard Room" class="room-image" />
+                  }
+                  @if (apiRoom.roomType === 'Deluxe') {
+                    <img src="images/deluxe-room.jpg" alt="Deluxe Room" class="room-image" />
+                  }
+                  @if (apiRoom.roomType === 'Suite') {
+                    <img src="images/royal-suite.jpg" alt="Royal Suite" class="room-image" />
+                  }
+
+                  <!-- Live price from database -->
+                  <div class="room-price-badge">
+                    <span class="price-val">&#8377;{{ apiRoom.pricePerNight | number }}</span>
+                    <span class="price-unit">/ night</span>
+                  </div>
+
+                  <!-- Availability status badge (green = AVAILABLE, amber = others) -->
+                  <div class="room-status-badge"
+                       [class.status-available]="apiRoom.status === 'AVAILABLE'"
+                       [class.status-unavailable]="apiRoom.status !== 'AVAILABLE'">
+                    {{ apiRoom.status }}
+                  </div>
+                </div>
+
+                <!-- Room Card Details -->
+                <div class="room-info">
+                  <!-- Room type as the card title -->
+                  <h3 class="room-title">
+                    @if (apiRoom.roomType === 'Suite') { Royal Suite }
+                    @else { {{ apiRoom.roomType }} Room }
+                  </h3>
+
+                  <!-- Database fields displayed as specs -->
+                  <div class="room-specs">
+                    <!-- Room Number from DB -->
+                    <div class="spec-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                        <line x1="9" y1="21" x2="9" y2="9"></line>
+                      </svg>
+                      <span>Room No. {{ apiRoom.roomNumber }}</span>
+                    </div>
+                    <!-- Capacity from DB -->
+                    <div class="spec-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                      </svg>
+                      <span>Up to {{ apiRoom.capacity }} Guest{{ apiRoom.capacity !== 1 ? 's' : '' }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Standard amenity chips (same for all rooms at this hotel) -->
+                  <div class="room-amenities">
+                    <span class="amenity-chip">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                        <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                        <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                      </svg>
+                      Free Wi-Fi
+                    </span>
+                    <span class="amenity-chip">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                        <circle cx="12" cy="12" r="2"></circle>
+                      </svg>
+                      AC
+                    </span>
+                    <span class="amenity-chip">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+                        <polyline points="17 2 12 7 7 2"></polyline>
+                      </svg>
+                      TV
+                    </span>
+                    <span class="amenity-chip">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                      </svg>
+                      Work Desk
+                    </span>
+                  </div>
+
+                  <!-- Card action buttons — Book Now uses the matching local room for the form -->
+                  <div class="card-actions">
+                    <button class="btn-outline-card"
+                            (click)="openRoomModal(rooms[apiRoom.roomType === 'Suite' ? 2 : apiRoom.roomType === 'Deluxe' ? 1 : 0])">
+                      View Details
+                    </button>
+                    <button class="btn-solid-card"
+                            [disabled]="apiRoom.status !== 'AVAILABLE'"
+                            [class.btn-disabled]="apiRoom.status !== 'AVAILABLE'"
+                            (click)="startBooking(apiRoom)">
+                      @if (apiRoom.status === 'AVAILABLE') { Book Now }
+                      @else { Unavailable }
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        @if (apiRooms.length === 0) {
+          <div class="rooms-api-status">
+            <p class="api-status-msg">No rooms found in the database.</p>
+          </div>
+        }
+
+      }
+
+    </section>
+
+    <!-- FACILITIES & EXPERIENCES -->
+    <section class="facilities-section" id="facilities-section">
+      <div class="section-header">
+        <div class="section-tag-wrap">
+          <span class="gold-line"></span>
+          <span class="section-tag">ROYAL SERVICES &amp; EXPERIENCES</span>
+          <span class="gold-line"></span>
+        </div>
+        <h2 class="section-title">Palace Amenities &amp; Gastronomy</h2>
+        <p class="section-subtitle">
+          Indulge in experiences tailored for royalty, from Michelin-inspired culinary artistry to rejuvenating spa therapies.
+        </p>
+      </div>
+
+      <div class="facilities-grid">
+        @for (fac of facilities; track fac.title) {
+          <div class="facility-card">
+            <div class="facility-image-wrap">
+              <img [src]="fac.image" [alt]="fac.title" class="facility-image" />
+              <div class="facility-badge">{{ fac.highlight }}</div>
+            </div>
+            <div class="facility-body">
+              <h3 class="facility-title">{{ fac.title }}</h3>
+              <span class="facility-tagline">{{ fac.tagline }}</span>
+              <p class="facility-desc">{{ fac.description }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+  }
+
+  <!-- ================= VIEW 2: BOOKING PAGE & FORM ================= -->
+  @if (currentView === 'booking') {
+    <section class="booking-view-container">
+      
+      <!-- Booking Header Navigation -->
+      <div class="booking-view-nav">
+        <button class="btn-back-link" (click)="navigateToHome()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Back to Homepage / Rooms
+        </button>
+
+        <!-- Progress Steps Tracker -->
+        <div class="booking-steps-tracker">
+          <div class="step-node active">
+            <span class="step-num">1</span>
+            <span class="step-text">Guest &amp; Stay Details</span>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-node">
+            <span class="step-num">2</span>
+            <span class="step-text">Reservation Summary</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="booking-page-header">
+        <h1 class="booking-page-title">Complete Your Reservation</h1>
+        <p class="booking-page-subtitle">
+          Please review your stay dates and enter your guest details below to submit your reservation request.
+        </p>
+      </div>
+
+      <!-- Main Booking Split Layout (Reference Mockup 4) -->
+      <div class="booking-split-layout">
+        
+        <!-- LEFT COLUMN: Forms -->
+        <div class="booking-forms-col">
+          
+          <!-- STEP 1: ROOM SELECTION & DATES -->
+          <div class="form-card">
+            <div class="form-card-header">
+              <div class="form-icon-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+              </div>
+              <div>
+                <h3 class="form-card-title">Stay &amp; Room Selection</h3>
+                <p class="form-card-desc">Choose your preferred suite and dates of residence.</p>
+              </div>
+            </div>
+
+            <!-- Room Selector Pills -->
+            <div class="room-selector-pills">
+              @for (room of rooms; track room.id) {
+                <div 
+                  class="room-pill-option" 
+                  [class.selected]="selectedBookingRoom.id === room.id"
+                  (click)="selectBookingRoom(room)">
+                  <span class="pill-name">{{ room.name }}</span>
+                  <span class="pill-price">&#8377;{{ room.price | number }} <small>/nt</small></span>
+                </div>
+              }
+            </div>
+
+            <!-- Dates & Guests Grid -->
+            <div class="form-row-grid">
+              
+              <div class="input-group">
+                <label class="input-label">Check-in Date *</label>
+                <input 
+                  type="date" 
+                  [(ngModel)]="checkInDate" 
+                  class="styled-input" 
+                  [class.input-error]="validationErrors['checkIn']" />
+                @if (validationErrors['checkIn']) {
+                  <span class="error-msg">{{ validationErrors['checkIn'] }}</span>
+                }
+              </div>
+
+              <div class="input-group">
+                <label class="input-label">Check-out Date *</label>
+                <input 
+                  type="date" 
+                  [(ngModel)]="checkOutDate" 
+                  class="styled-input" 
+                  [class.input-error]="validationErrors['checkOut']" />
+                @if (validationErrors['checkOut']) {
+                  <span class="error-msg">{{ validationErrors['checkOut'] }}</span>
+                }
+              </div>
+
+              <div class="input-group">
+                <label class="input-label">Number of Guests</label>
+                <select [(ngModel)]="guestsCount" class="styled-input">
+                  <option value="1 Guest, 1 Room">1 Guest, 1 Room</option>
+                  <option value="2 Guests, 1 Room">2 Guests, 1 Room</option>
+                  <option value="3 Guests, 1 Room">3 Guests, 1 Room</option>
+                  <option value="4 Guests, 2 Rooms">4 Guests, 2 Rooms</option>
+                  <option value="Family Suite (5+ Guests)">Family (5+ Guests)</option>
+                </select>
+              </div>
+
+            </div>
+
+            <!-- Date validation warning if checkout is not after checkin -->
+            @if (checkInDate && checkOutDate && !isDateRangeValid) {
+              <div class="date-alert-banner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span>Invalid Dates: Check-out date must be strictly after the check-in date.</span>
+              </div>
+            }
+          </div>
+
+          <!-- STEP 2: GUEST DETAILS FORM -->
+          <div class="form-card">
+            <div class="form-card-header">
+              <div class="form-icon-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div>
+                <h3 class="form-card-title">Guest Information</h3>
+                <p class="form-card-desc">Enter your contact details for reservation correspondence.</p>
+              </div>
+            </div>
+
+            <div class="form-fields-container">
+              
+              <div class="input-group full-width">
+                <label class="input-label">Full Name *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="guestName" 
+                  placeholder="e.g. Abhinand Santhosh" 
+                  class="styled-input"
+                  [class.input-error]="validationErrors['guestName']" />
+                @if (validationErrors['guestName']) {
+                  <span class="error-msg">{{ validationErrors['guestName'] }}</span>
+                }
+              </div>
+
+              <div class="form-row-grid">
+                
+                <div class="input-group">
+                  <label class="input-label">Phone Number *</label>
+                  <div class="phone-input-wrap">
+                    <span class="country-prefix">+91</span>
+                    <input 
+                      type="tel" 
+                      [(ngModel)]="guestPhone" 
+                      placeholder="98765 43210" 
+                      class="styled-input phone-field"
+                      [class.input-error]="validationErrors['guestPhone']" />
+                  </div>
+                  @if (validationErrors['guestPhone']) {
+                    <span class="error-msg">{{ validationErrors['guestPhone'] }}</span>
+                  }
+                </div>
+
+                <div class="input-group">
+                  <label class="input-label">Email Address *</label>
+                  <input 
+                    type="email" 
+                    [(ngModel)]="guestEmail" 
+                    placeholder="guest@example.com" 
+                    class="styled-input"
+                    [class.input-error]="validationErrors['guestEmail']" />
+                  @if (validationErrors['guestEmail']) {
+                    <span class="error-msg">{{ validationErrors['guestEmail'] }}</span>
+                  }
+                </div>
+
+              </div>
+
+              <div class="form-row-grid">
+                <div class="input-group">
+                  <label class="input-label">Purpose of Stay</label>
+                  <select [(ngModel)]="purposeOfStay" class="styled-input">
+                    <option value="Leisure & Holiday">Leisure &amp; Holiday</option>
+                    <option value="Business & Corporate">Business &amp; Corporate</option>
+                    <option value="Anniversary & Celebration">Anniversary &amp; Celebration</option>
+                    <option value="Family Gathering">Family Gathering</option>
+                  </select>
+                </div>
+
+                <div class="input-group">
+                  <label class="input-label">Company / Organization (Optional)</label>
+                  <input 
+                    type="text" 
+                    [(ngModel)]="companyName" 
+                    placeholder="Optional organisation name" 
+                    class="styled-input" />
+                </div>
+              </div>
+
+              <div class="input-group full-width">
+                <label class="input-label">Special Requests (Optional)</label>
+                <textarea 
+                  [(ngModel)]="specialRequests" 
+                  rows="3" 
+                  placeholder="High floor room, quiet wing, airport pickup, early arrival..."
+                  class="styled-textarea"></textarea>
+              </div>
+
+            </div>
+
+            <!-- Booking Guarantee & Hospitality Inclusions -->
+            <div class="booking-guarantee-box">
+              <div class="guarantee-badge-chip">Best Rate &amp; Security Guarantee</div>
+              <p>
+                Your reservation details are handled with utmost privacy and discretion. Complimentary royal breakfast, high-speed Wi-Fi, and personalized butler concierge are included with your stay.
+              </p>
+            </div>
+
+            <!-- Action Button -->
+            <div class="form-submit-row">
+              @if (bookingError) {
+                <div class="rooms-api-error booking-error-box">
+                  <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  <p>{{ bookingError }}</p>
+                </div>
+              }
+
+              <button class="btn-submit-booking"
+                      [disabled]="isSubmittingBooking"
+                      [class.btn-disabled]="isSubmittingBooking"
+                      (click)="submitReservationRequest()">
+                @if (isSubmittingBooking) {
+                  <span class="btn-spinner"></span>
+                  CONFIRMING RESERVATION...
+                } @else {
+                  SUBMIT RESERVATION REQUEST
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                }
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: Booking Summary Card (Reference Mockup 4) -->
+        <div class="booking-summary-col">
+          <div class="summary-card">
+            
+            <div class="summary-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <h3>BOOKING SUMMARY</h3>
+            </div>
+
+            <!-- Room Thumbnail & Title -->
+            <div class="summary-room-preview">
+              <img [src]="selectedBookingRoom.image" [alt]="selectedBookingRoom.name" class="summary-room-img" />
+              <div class="summary-room-info">
+                <span class="summary-cat-pill">{{ selectedBookingRoom.category }}</span>
+                <h4 class="summary-room-name">{{ selectedBookingRoom.name }}</h4>
+                <p class="summary-room-price">&#8377;{{ selectedBookingRoom.price | number }} <small>/ night</small></p>
+              </div>
+            </div>
+
+            <!-- Stay Specs -->
+            <div class="summary-specs-list">
+              <div class="summary-spec-item">
+                <span class="spec-label">Check-in:</span>
+                <span class="spec-val">{{ checkInDate || 'Not selected' }}</span>
+              </div>
+              <div class="summary-spec-item">
+                <span class="spec-label">Check-out:</span>
+                <span class="spec-val">{{ checkOutDate || 'Not selected' }}</span>
+              </div>
+              <div class="summary-spec-item">
+                <span class="spec-label">Duration:</span>
+                <span class="spec-val highlight-val">{{ calculatedNights }} Night(s)</span>
+              </div>
+              <div class="summary-spec-item">
+                <span class="spec-label">Guests:</span>
+                <span class="spec-val">{{ guestsCount }}</span>
+              </div>
+              <div class="summary-spec-item">
+                <span class="spec-label">Bed Type:</span>
+                <span class="spec-val">{{ selectedBookingRoom.bed }}</span>
+              </div>
+            </div>
+
+            <!-- Price Breakdown -->
+            <div class="summary-price-breakdown">
+              <div class="breakdown-row">
+                <span>Room Charges ({{ calculatedNights }} night{{ calculatedNights > 1 ? 's' : '' }}):</span>
+                <span>&#8377;{{ roomTotalCharge | number }}</span>
+              </div>
+              <div class="breakdown-row">
+                <span>Taxes &amp; Luxury GST (12%):</span>
+                <span>&#8377;{{ estimatedTaxes | number }}</span>
+              </div>
+              <div class="breakdown-divider"></div>
+              <div class="breakdown-row total-row">
+                <span>Estimated Total:</span>
+                <span class="total-amount">&#8377;{{ estimatedGrandTotal | number }}</span>
+              </div>
+              <p class="tax-note">Inclusive of all applicable taxes and complimentary royal breakfast.</p>
+            </div>
+
+            <!-- Guarantee Perks -->
+            <div class="summary-perks">
+              <div class="perk-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span>Best Price Guarantee Direct</span>
+              </div>
+              <div class="perk-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 14 14"></polyline>
+                </svg>
+                <span>Instant Free Cancellation up to 24h</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+  }
+
+  <!-- ================= VIEW 3: SECURE DEMO PAYMENT / CHECKOUT ================= -->
+  @if (currentView === 'payment') {
+    <section class="booking-view-container payment-view-container">
+      
+      <!-- Stepper: 1. Reservation (Done) -> 2. Payment & Checkout (Active) -> 3. Receipt -->
+      <div class="checkout-stepper">
+        <div class="step-item step-completed">
+          <div class="step-circle">&#10003;</div>
+          <span class="step-title">1. Room Reserved</span>
+        </div>
+        <div class="step-line active-line"></div>
+        <div class="step-item step-active">
+          <div class="step-circle">2</div>
+          <span class="step-title">2. Payment &amp; Checkout</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-item">
+          <div class="step-circle">3</div>
+          <span class="step-title">3. Official Receipt</span>
+        </div>
+      </div>
+
+      <div class="booking-view-header">
+        <div class="section-tag-wrap">
+          <span class="gold-line"></span>
+          <span class="section-tag">ROYAL CHECKOUT</span>
+          <span class="gold-line"></span>
+        </div>
+        <h1 class="booking-page-title">Settle Your Suite Reservation</h1>
+        <p class="booking-page-subtitle">
+          Booking <strong>{{ confirmedBookingId }}</strong> is saved in MySQL. Select a payment option below to finalize.
+        </p>
+      </div>
+
+      <!-- Academic Project Demo Banner -->
+      <div class="demo-academic-banner">
+        <div class="demo-banner-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+        <div class="demo-banner-content">
+          <h4>COLLEGE PROJECT DEMO PAYMENT SYSTEM</h4>
+          <p>
+            This is an academic simulation for hotel billing. <strong>No real money is charged</strong>, and sensitive banking credentials (CVV, UPI PIN, OTP) are strictly never collected. Use the simulation controls below to test verified database recording.
+          </p>
+        </div>
+      </div>
+
+      <div class="booking-layout-grid">
+        
+        <!-- LEFT COLUMN: Payment Methods & Simulation Controls -->
+        <div class="booking-form-col">
+          
+          <div class="form-card payment-methods-card">
+            <div class="form-card-header">
+              <div class="form-icon-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                  <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
+              </div>
+              <div>
+                <h3 class="form-card-title">Select Payment Mode</h3>
+                <p class="form-card-desc">Choose your preferred settlement method for this stay.</p>
+              </div>
+            </div>
+
+            <!-- Payment Method Tabs -->
+            <div class="payment-tabs-row">
+              <button 
+                type="button"
+                class="pay-tab-btn" 
+                [class.active]="selectedPaymentMethod === 'UPI'"
+                (click)="selectPaymentMethod('UPI')">
+                <span class="pay-tab-icon">⚡</span>
+                <span class="pay-tab-text">UPI / QR Code</span>
+              </button>
+              <button 
+                type="button"
+                class="pay-tab-btn" 
+                [class.active]="selectedPaymentMethod === 'Card'"
+                (click)="selectPaymentMethod('Card')">
+                <span class="pay-tab-icon">💳</span>
+                <span class="pay-tab-text">Credit / Debit Card</span>
+              </button>
+              <button 
+                type="button"
+                class="pay-tab-btn" 
+                [class.active]="selectedPaymentMethod === 'Cash'"
+                (click)="selectPaymentMethod('Cash')">
+                <span class="pay-tab-icon">🏨</span>
+                <span class="pay-tab-text">Cash at Hotel</span>
+              </button>
+            </div>
+
+            <!-- TAB 1: UPI CONTENT -->
+            @if (selectedPaymentMethod === 'UPI') {
+              <div class="pay-method-panel">
+                <div class="upi-demo-grid">
+                  <div class="upi-qr-card">
+                    <div class="qr-placeholder-box">
+                      <div class="qr-mock-grid">
+                        <div class="qr-corner top-left"></div>
+                        <div class="qr-corner top-right"></div>
+                        <div class="qr-corner bottom-left"></div>
+                        <div class="qr-center-logo">RH</div>
+                      </div>
+                      <span class="qr-caption">Scan to Demo Pay</span>
+                    </div>
+                    <span class="qr-subtext">Google Pay &bull; PhonePe &bull; Paytm &bull; BHIM</span>
+                  </div>
+
+                  <div class="upi-inputs-col">
+                    <div class="input-group">
+                      <label class="input-label">Virtual Payment Address (VPA / UPI ID)</label>
+                      <input 
+                        type="text" 
+                        [(ngModel)]="demoUpiId" 
+                        placeholder="guest@okhdfcbank" 
+                        class="styled-input" />
+                      <small class="field-hint">Pre-filled college demo placeholder. Feel free to edit.</small>
+                    </div>
+
+                    <div class="upi-safety-box">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                      </svg>
+                      <span>No UPI PIN required. The verified amount is sent directly to the Spring Boot backend.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- TAB 2: CARD CONTENT -->
+            @if (selectedPaymentMethod === 'Card') {
+              <div class="pay-method-panel">
+                <div class="card-demo-mockup">
+                  <div class="luxury-credit-card">
+                    <div class="card-chip-row">
+                      <div class="card-chip"></div>
+                      <span class="card-brand">ROYAL PRIVILEGE</span>
+                    </div>
+                    <div class="card-number-display">{{ demoCardNumber || '•••• •••• •••• 4242' }}</div>
+                    <div class="card-footer-row">
+                      <div>
+                        <span class="card-label">CARDHOLDER</span>
+                        <span class="card-val">{{ demoCardHolder || confirmedBooking?.customerName || guestName }}</span>
+                      </div>
+                      <div>
+                        <span class="card-label">EXPIRES</span>
+                        <span class="card-val">{{ demoCardExpiry }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card-inputs-grid">
+                    <div class="input-group">
+                      <label class="input-label">Demo Card Number</label>
+                      <input 
+                        type="text" 
+                        [(ngModel)]="demoCardNumber" 
+                        placeholder="•••• •••• •••• 4242" 
+                        class="styled-input" />
+                    </div>
+
+                    <div class="form-row-grid">
+                      <div class="input-group">
+                        <label class="input-label">Expiry (MM/YY)</label>
+                        <input 
+                          type="text" 
+                          [(ngModel)]="demoCardExpiry" 
+                          placeholder="12/28" 
+                          class="styled-input" />
+                      </div>
+                      <div class="input-group">
+                        <label class="input-label">CVV (Demo Mock)</label>
+                        <input 
+                          type="password" 
+                          value="•••" 
+                          disabled 
+                          class="styled-input disabled-input" />
+                      </div>
+                    </div>
+
+                    <small class="field-hint">Academic Demo Only: Real CVV and OTP inputs are intentionally disabled.</small>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- TAB 3: CASH AT HOTEL CONTENT -->
+            @if (selectedPaymentMethod === 'Cash') {
+              <div class="pay-method-panel">
+                <div class="cash-hotel-box">
+                  <div class="cash-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                      <circle cx="12" cy="12" r="2"></circle>
+                      <path d="M6 12h.01M18 12h.01"></path>
+                    </svg>
+                  </div>
+                  <div class="cash-info-content">
+                    <h4>Pay at Hotel Front Desk Upon Arrival</h4>
+                    <p>
+                      Your suite reservation remains guaranteed under booking <strong>{{ confirmedBookingId }}</strong>. 
+                      You may settle the balance in cash at our concierge desk during check-in.
+                    </p>
+                    <div class="cash-benefits-tags">
+                      <span>✓ Zero Online Advance Needed</span>
+                      <span>✓ Pay at Concierge Desk</span>
+                      <span>✓ Printed Cash Receipt Issued</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- Simulation Error Message Banner -->
+            @if (paymentError) {
+              <div class="rooms-api-error payment-error-banner">
+                <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <div>
+                  <strong>Payment Alert:</strong>
+                  <p>{{ paymentError }}</p>
+                </div>
+              </div>
+            }
+
+            <!-- SIMULATION ACTIONS ROW -->
+            <div class="payment-action-buttons">
+              <button 
+                type="button" 
+                class="btn-pay-success"
+                [disabled]="isSubmittingPayment"
+                (click)="submitPayment(true)">
+                @if (isSubmittingPayment) {
+                  <span class="btn-spinner"></span> PROCESSING TRANSACTION...
+                } @else {
+                  <span class="btn-pay-title">✓ SIMULATE PAYMENT SUCCESS</span>
+                  <span class="btn-pay-sub">Persist PAID record to MySQL (&#8377;{{ (confirmedBooking?.totalAmount || estimatedGrandTotal) | number:'1.2-2' }})</span>
+                }
+              </button>
+
+              <button 
+                type="button" 
+                class="btn-pay-failure"
+                [disabled]="isSubmittingPayment"
+                (click)="submitPayment(false)">
+                <span class="btn-pay-title">✕ SIMULATE PAYMENT FAILURE</span>
+                <span class="btn-pay-sub">Test rejection &amp; duplicate payment safety</span>
+              </button>
+            </div>
+
+            <div class="demo-academic-footer-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>Security Rule: Payment total is verified exclusively from MySQL database records. Frontend amount manipulation is ignored by the Spring Boot backend.</span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: Verified Booking Order Summary (read-only from backend) -->
+        <div class="booking-summary-col">
+          <div class="summary-card payment-summary-card">
+            
+            <div class="summary-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <h3>VERIFIED ORDER SUMMARY</h3>
+            </div>
+
+            <!-- Booking Reference Badge -->
+            <div class="order-ref-box">
+              <span class="ref-label">RESERVATION REFERENCE</span>
+              <span class="ref-code">{{ confirmedBookingId }}</span>
+              <span class="ref-db-id">MySQL Booking #{{ confirmedBooking?.bookingId }}</span>
+            </div>
+
+            <!-- Stay Specs -->
+            <div class="summary-specs-list">
+              <div class="summary-spec-item">
+                <span class="spec-label">Guest Name:</span>
+                <span class="spec-val highlight-val">{{ confirmedBooking?.customerName || guestName }}</span>
+              </div>
+              <div class="summary-spec-item">
+                <span class="spec-label">Assigned Room:</span>
+                <span class="spec-val">Room {{ confirmedBooking?.roomNumber || selectedRoomNumber }} ({{ confirmedBooking?.roomType || selectedBookingRoom.name }})</span>
+              </div>
+              <div class="summary-spec-item">
+                <span class="spec-label">Check-in:</span>
+                <span class="spec-val">{{ confirmedBooking?.checkIn || checkInDate }}</span>
+              </div>
+              <div class="summary-spec-item">
+                <span class="spec-label">Check-out:</span>
+                <span class="spec-val">{{ confirmedBooking?.checkOut || checkOutDate }}</span>
+              </div>
+              <div class="summary-spec-item">
+                <span class="spec-label">Duration:</span>
+                <span class="spec-val">{{ confirmedBooking?.numberOfNights || calculatedNights }} Night(s)</span>
+              </div>
+              <div class="summary-spec-item">
+                <span class="spec-label">Guests:</span>
+                <span class="spec-val">{{ confirmedBooking?.numberOfGuests || guestsCount }}</span>
+              </div>
+              <div class="summary-spec-item">
+                <span class="spec-label">Booking Status:</span>
+                <span class="spec-val booking-badge-active">{{ confirmedBooking?.bookingStatus || 'CONFIRMED' }}</span>
+              </div>
+            </div>
+
+            <!-- Price Summary from Server -->
+            <div class="summary-price-breakdown">
+              <div class="breakdown-row">
+                <span>Nightly Rate:</span>
+                <span>&#8377;{{ (confirmedBooking?.pricePerNight || selectedBookingRoom.price) | number }}</span>
+              </div>
+              <div class="breakdown-row">
+                <span>Calculated Nights:</span>
+                <span>&times; {{ confirmedBooking?.numberOfNights || calculatedNights }}</span>
+              </div>
+              <div class="breakdown-divider"></div>
+              <div class="breakdown-row total-row">
+                <span>Total Payable:</span>
+                <span class="total-amount">&#8377;{{ (confirmedBooking?.totalAmount || estimatedGrandTotal) | number:'1.2-2' }}</span>
+              </div>
+              <p class="tax-note">Verified against database record. Server-authoritative billing.</p>
+            </div>
+
+            <!-- Security Assurance -->
+            <div class="summary-perks">
+              <div class="perk-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <span>256-Bit Encrypted Academic Session</span>
+              </div>
+              <div class="perk-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span>Automated MySQL Transaction Rollback</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+  }
+
+  <!-- ================= VIEW 4: OFFICIAL PAYMENT RECEIPT ================= -->
+  @if (currentView === 'confirmation') {
+    <section class="confirmation-view-container payment-receipt-view">
+      
+      <!-- Stepper: 1 (Done) -> 2 (Done) -> 3. Official Receipt (Active) -->
+      <div class="checkout-stepper">
+        <div class="step-item step-completed">
+          <div class="step-circle">&#10003;</div>
+          <span class="step-title">1. Room Reserved</span>
+        </div>
+        <div class="step-line completed-line"></div>
+        <div class="step-item step-completed">
+          <div class="step-circle">&#10003;</div>
+          <span class="step-title">2. Payment Processed</span>
+        </div>
+        <div class="step-line active-line"></div>
+        <div class="step-item step-active">
+          <div class="step-circle">3</div>
+          <span class="step-title">3. Official Receipt</span>
+        </div>
+      </div>
+
+      <div class="confirmation-card official-receipt-card" id="printable-receipt">
+        
+        <!-- Receipt Top Header -->
+        <div class="receipt-header-row">
+          <div class="receipt-brand">
+            <img src="logo.png" alt="Royal Hotels Logo" class="receipt-logo-img" />
+            <div>
+              <h2 class="receipt-hotel-name">{{ hotelName }}</h2>
+              <span class="receipt-sub">OFFICIAL GUEST FOLIO &amp; PAYMENT RECEIPT</span>
+            </div>
+          </div>
+          <div class="receipt-stamp-badge"
+               [class.stamp-paid]="confirmedPayment?.paymentStatus === 'PAID'"
+               [class.stamp-pending]="confirmedPayment?.paymentStatus !== 'PAID'">
+            {{ confirmedPayment?.paymentStatus || 'PAID' }}
+          </div>
+        </div>
+
+        <div class="receipt-divider-gold"></div>
+
+        <!-- Success Message -->
+        <div class="receipt-message-box">
+          <h3 class="receipt-greeting">Thank you, {{ confirmedPayment?.customerName || confirmedBooking?.customerName || guestName }}!</h3>
+          <p class="receipt-desc">
+            Your payment via <strong>{{ confirmedPayment?.paymentMethod || selectedPaymentMethod }}</strong> has been verified and registered in the MySQL database.
+            A confirmation receipt has been dispatched to <strong>{{ confirmedPayment?.customerEmail || confirmedBooking?.customerEmail || guestEmail }}</strong>.
+          </p>
+        </div>
+
+        <!-- Key Identifiers Grid -->
+        <div class="receipt-identifiers-grid">
+          <div class="id-cell">
+            <span class="id-label">PAYMENT TRANSACTION ID</span>
+            <span class="id-val highlight-gold">RH-PAY-{{ confirmedPayment?.paymentId || 'N/A' }}</span>
+            <small class="id-sub">MySQL Table `payments` #{{ confirmedPayment?.paymentId }}</small>
+          </div>
+          <div class="id-cell">
+            <span class="id-label">BOOKING ID</span>
+            <span class="id-val">{{ confirmedBookingId }}</span>
+            <small class="id-sub">MySQL Table `bookings` #{{ confirmedPayment?.bookingId || confirmedBooking?.bookingId }}</small>
+          </div>
+          <div class="id-cell">
+            <span class="id-label">PAYMENT METHOD</span>
+            <span class="id-val method-tag">{{ confirmedPayment?.paymentMethod || selectedPaymentMethod }}</span>
+            <small class="id-sub">Simulated Demo Settlement</small>
+          </div>
+          <div class="id-cell">
+            <span class="id-label">TRANSACTION DATE</span>
+            <span class="id-val">{{ (confirmedPayment?.paymentDate | date:'medium') || 'Just Now' }}</span>
+            <small class="id-sub">Server Timestamp</small>
+          </div>
+        </div>
+
+        <!-- Line Item Table -->
+        <div class="receipt-table-wrap">
+          <table class="receipt-table">
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Dates</th>
+                <th>Units</th>
+                <th class="text-right">Rate</th>
+                <th class="text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>Room {{ confirmedPayment?.roomNumber || confirmedBooking?.roomNumber || selectedRoomNumber }}</strong>
+                  <br />
+                  <span class="table-sub">{{ confirmedPayment?.roomType || confirmedBooking?.roomType || selectedBookingRoom.name }} &bull; {{ confirmedBooking?.numberOfGuests || guestsCount }}</span>
+                </td>
+                <td>
+                  {{ confirmedBooking?.checkIn || checkInDate }} to {{ confirmedBooking?.checkOut || checkOutDate }}
+                </td>
+                <td>
+                  {{ confirmedBooking?.numberOfNights || calculatedNights }} Night(s)
+                </td>
+                <td class="text-right">
+                  &#8377;{{ (confirmedBooking?.pricePerNight || selectedBookingRoom.price) | number }}
+                </td>
+                <td class="text-right">
+                  &#8377;{{ (confirmedPayment?.amount || confirmedBooking?.totalAmount || estimatedGrandTotal) | number:'1.2-2' }}
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4" class="text-right subtotal-title">Total Amount Settled:</td>
+                <td class="text-right subtotal-amount highlight-gold">
+                  &#8377;{{ (confirmedPayment?.amount || confirmedBooking?.totalAmount || estimatedGrandTotal) | number:'1.2-2' }}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Status Distinction Note -->
+        <div class="status-distinction-banner">
+          <div class="distinction-item">
+            <span class="dist-label">Reservation Status:</span>
+            <span class="dist-val badge-confirmed">{{ confirmedBooking?.bookingStatus || 'CONFIRMED' }}</span>
+          </div>
+          <div class="distinction-separator">&bull;</div>
+          <div class="distinction-item">
+            <span class="dist-label">Payment Status:</span>
+            <span class="dist-val badge-paid">{{ confirmedPayment?.paymentStatus || 'PAID' }}</span>
+          </div>
+          <div class="distinction-separator">&bull;</div>
+          <div class="distinction-item">
+            <span class="dist-label">Database Synchronization:</span>
+            <span class="dist-val text-success">Verified in MySQL</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="conf-actions-row">
+          <button class="btn-solid-card btn-receipt-print" (click)="printReceipt()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px; margin-right: 8px;">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print Receipt
+          </button>
+          <button class="btn-solid-card" (click)="startBooking()">
+            Book Another Suite
+          </button>
+          <button class="btn-outline-card" (click)="navigateToHome()">
+            Return to Homepage
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+  }
+
+  <!-- ================= ROOM DETAILS MODAL ================= -->
+  @if (selectedRoomModal) {
+    <div class="modal-backdrop" (click)="closeRoomModal()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        
+        <button class="modal-close-btn" (click)="closeRoomModal()">&times;</button>
+        
+        <div class="modal-content-grid">
+          <div class="modal-image-col">
+            <img [src]="selectedRoomModal.image" [alt]="selectedRoomModal.name" class="modal-img" />
+            <div class="modal-price-tag">
+              &#8377;{{ selectedRoomModal.price | number }} <small>/ night (incl. taxes)</small>
+            </div>
+          </div>
+
+          <div class="modal-info-col">
+            <span class="modal-category">{{ selectedRoomModal.category }}</span>
+            <h2 class="modal-room-name">{{ selectedRoomModal.name }}</h2>
+            <p class="modal-desc">{{ selectedRoomModal.description }}</p>
+
+            <div class="modal-specs-list">
+              <div class="modal-spec-row">
+                <strong>Capacity:</strong> <span>{{ selectedRoomModal.guests }}</span>
+              </div>
+              <div class="modal-spec-row">
+                <strong>Bedding:</strong> <span>{{ selectedRoomModal.bed }}</span>
+              </div>
+              <div class="modal-spec-row">
+                <strong>Room Size:</strong> <span>{{ selectedRoomModal.size }}</span>
+              </div>
+            </div>
+
+            <div class="modal-amenities-section">
+              <h4>Included Room Facilities</h4>
+              <div class="modal-amenity-tags">
+                @for (amenity of selectedRoomModal.amenities; track amenity) {
+                  <span class="tag-pill">&#10003; {{ amenity }}</span>
+                }
+              </div>
+            </div>
+
+            <div class="modal-actions">
+              <button class="btn-solid-card" (click)="startBooking(selectedRoomModal)">
+                Book This Room Now
+              </button>
+              <button class="btn-outline-card" (click)="closeRoomModal()">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  }
+
+  <!-- ================= LUXURY FOOTER ================= -->
+  <footer class="luxury-footer" id="footer">
+    
+    <div class="footer-top">
+      <div class="footer-brand-col">
+        <div class="footer-logo-row">
+          <img src="logo.png" alt="Royal Hotels" class="footer-logo" />
+          <div>
+            <h3 class="footer-brand-name">{{ hotelName }}</h3>
+            <p class="footer-tagline">“{{ tagline }}”</p>
+          </div>
+        </div>
+        <p class="footer-about">
+          A luxury retreat where timeless heritage meets modern five-star comfort. 
+          Dedicated to crafting authentic and unforgettable moments for every guest.
+        </p>
+      </div>
+
+      <div class="footer-links-col">
+        <h4 class="footer-heading">Quick Navigation</h4>
+        <ul class="footer-link-list">
+          <li><a (click)="navigateToHome()">Home</a></li>
+          <li><a (click)="scrollToSection('rooms-section')">Rooms &amp; Suites</a></li>
+          <li><a (click)="startBooking()">Reservation Desk</a></li>
+          <li><a (click)="scrollToSection('facilities-section')">Dining &amp; Spa</a></li>
+          <li><a (click)="scrollToSection('about-section')">About Royal Hotels</a></li>
+          <li><a routerLink="/admin/login" style="color: #c5a880; font-weight: 600;">Staff / Admin Portal &rarr;</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-col">
+        <h4 class="footer-heading">Guest Policies</h4>
+        <ul class="footer-link-list">
+          <li><span>Check-in: 02:00 PM Onwards</span></li>
+          <li><span>Check-out: 11:00 AM</span></li>
+          <li><span>24-Hour Cancellation Available</span></li>
+          <li><span>Best Price Guarantee Direct</span></li>
+          <li><span>Complimentary Valet Parking</span></li>
+        </ul>
+      </div>
+
+      <div class="footer-contact-col">
+        <h4 class="footer-heading">Contact &amp; Reservations</h4>
+        <div class="contact-entry">
+          <svg class="entry-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <span>123 Royal Palace Avenue, Jaipur / New Delhi - 110001, India</span>
+        </div>
+        <div class="contact-entry">
+          <svg class="entry-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>{{ phone }} (Mon - Sun, 24x7)</span>
+        </div>
+        <div class="contact-entry">
+          <svg class="entry-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          <span>{{ email }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Copyright -->
+    <div class="footer-bottom">
+      <p>&copy; 2026 {{ hotelName }}. All rights reserved. • <a routerLink="/admin/login" style="color: rgba(197, 168, 128, 0.7); text-decoration: none;">Admin Access</a></p>
+      <p class="footer-motto">“WHERE COMFORT MEETS LUXURY”</p>
+    </div>
+
+  </footer>
+
+</div>
+}
+
+<router-outlet></router-outlet>

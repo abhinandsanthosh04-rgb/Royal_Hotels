@@ -1,0 +1,911 @@
+<div class="admin-layout">
+  
+  <!-- Toast Notification -->
+  @if (toastMessage) {
+    <div class="toast-notification" [ngClass]="toastMessage.type" role="alert">
+      <div class="toast-content">
+        @if (toastMessage.type === 'success') {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="toast-icon">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        } @else if (toastMessage.type === 'error') {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="toast-icon">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="toast-icon">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        }
+        <span>{{ toastMessage.text }}</span>
+      </div>
+      <button class="toast-close" (click)="toastMessage = null">&times;</button>
+    </div>
+  }
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <header class="admin-topbar">
+    <div class="topbar-left">
+      <button class="mobile-menu-btn" (click)="isMobileSidebarOpen = !isMobileSidebarOpen" aria-label="Toggle menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-menu">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <a routerLink="/" class="brand-badge">
+        <img src="logo.png" alt="Royal Hotels" class="topbar-logo" />
+        <div class="brand-info">
+          <span class="brand-title">ROYAL HOTELS</span>
+          <span class="brand-badge-tag">ADMIN PORTAL</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="topbar-right">
+      <!-- Public Site Link -->
+      <a routerLink="/" class="btn-ghost-link" title="Open Hotel Guest Website">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="top-icon">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+        <span class="hide-mobile">Public Site</span>
+      </a>
+
+      <!-- Refresh Data Button -->
+      <button class="btn-ghost-link" (click)="refreshCurrentData()" title="Refresh Data" [disabled]="isLoading">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="top-icon" [class.rotating]="isLoading">
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <polyline points="1 20 1 14 7 14"></polyline>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+        <span class="hide-mobile">Refresh</span>
+      </button>
+
+      <!-- Admin Identity Badge -->
+      <div class="admin-user-pill">
+        <div class="user-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="avatar-icon">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <div class="user-details hide-mobile">
+          <span class="user-name">{{ currentAdmin?.fullName || 'Administrator' }}</span>
+          <span class="user-role">{{ currentAdmin?.role || 'ROLE_ADMIN' }}</span>
+        </div>
+      </div>
+
+      <!-- Logout Button -->
+      <button class="btn-logout" (click)="logout()" title="Secure Logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="logout-icon">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span class="hide-mobile">Sign Out</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= MAIN BODY CONTAINER ================= -->
+  <div class="admin-main">
+    
+    <!-- Mobile Backdrop -->
+    @if (isMobileSidebarOpen) {
+      <div class="sidebar-backdrop" (click)="isMobileSidebarOpen = false"></div>
+    }
+
+    <!-- ================= SIDEBAR NAVIGATION ================= -->
+    <aside class="admin-sidebar" [class.open]="isMobileSidebarOpen">
+      <div class="sidebar-header">
+        <span class="nav-label">PORTAL SECTIONS</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button
+          class="nav-item"
+          [class.active]="currentSection === 'overview'"
+          (click)="setSection('overview')"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Overview &amp; Stats</span>
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="currentSection === 'reservations'"
+          (click)="setSection('reservations')"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>Reservations</span>
+          @if (stats?.confirmedBookings) {
+            <span class="badge-count">{{ stats?.confirmedBookings }}</span>
+          }
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="currentSection === 'customers'"
+          (click)="setSection('customers')"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span>Customers</span>
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="currentSection === 'rooms'"
+          (click)="setSection('rooms')"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Rooms Catalogue</span>
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="currentSection === 'payments'"
+          (click)="setSection('payments')"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+          <span>Payments Audit</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Quick Stats -->
+      @if (stats) {
+        <div class="sidebar-summary">
+          <div class="summary-card">
+            <span class="sum-title">HOTEL OCCUPANCY</span>
+            <div class="occupancy-progress">
+              <div class="progress-bar" [style.width.%]="stats.occupancyRatePercentage"></div>
+            </div>
+            <div class="sum-footer">
+              <span>{{ stats.occupiedRooms }} of {{ stats.totalRooms }} Rooms</span>
+              <span class="gold-bold">{{ stats.occupancyRatePercentage }}%</span>
+            </div>
+          </div>
+        </div>
+      }
+    </aside>
+
+    <!-- ================= CONTENT AREA ================= -->
+    <main class="admin-content">
+
+      <!-- ================= 1. OVERVIEW & STATS ================= -->
+      @if (currentSection === 'overview') {
+        <div class="section-container">
+          <div class="section-header">
+            <div>
+              <h1 class="page-title">Executive Overview</h1>
+              <p class="page-subtitle">Real-time occupancy, revenue stream, and guest intelligence</p>
+            </div>
+          </div>
+
+          <!-- KPI Cards Grid -->
+          <div class="kpi-grid">
+            <!-- Total Revenue -->
+            <div class="kpi-card gold-border">
+              <div class="kpi-icon-wrap gold">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="kpi-icon">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+              <div class="kpi-info">
+                <span class="kpi-label">TOTAL REVENUE (PAID)</span>
+                <span class="kpi-value">{{ formatCurrency(stats?.totalRevenue) }}</span>
+                <span class="kpi-sub">Verified payments received</span>
+              </div>
+            </div>
+
+            <!-- Total Bookings -->
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="kpi-icon">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+              <div class="kpi-info">
+                <span class="kpi-label">TOTAL RESERVATIONS</span>
+                <span class="kpi-value">{{ stats?.totalBookings || 0 }}</span>
+                <span class="kpi-sub">
+                  {{ stats?.confirmedBookings || 0 }} Confirmed • {{ stats?.checkedInBookings || 0 }} In-House
+                </span>
+              </div>
+            </div>
+
+            <!-- Occupancy Rate -->
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="kpi-icon">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+              </div>
+              <div class="kpi-info">
+                <span class="kpi-label">ROOM OCCUPANCY</span>
+                <span class="kpi-value">{{ stats?.occupancyRatePercentage || 0 }}%</span>
+                <span class="kpi-sub">
+                  {{ stats?.availableRooms || 0 }} Available • {{ stats?.occupiedRooms || 0 }} Occupied
+                </span>
+              </div>
+            </div>
+
+            <!-- Total Customers -->
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap purple">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="kpi-icon">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div class="kpi-info">
+                <span class="kpi-label">TOTAL GUESTS</span>
+                <span class="kpi-value">{{ stats?.totalCustomers || 0 }}</span>
+                <span class="kpi-sub">Registered profiles in database</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Room Status & Revenue Breakdown -->
+          <div class="overview-analytics-row">
+            <!-- Room Inventory Status -->
+            <div class="analytics-card">
+              <h2 class="card-heading">Room Inventory Status</h2>
+              <div class="room-status-summary">
+                <div class="status-pill-box available">
+                  <span class="pill-number">{{ stats?.availableRooms || 0 }}</span>
+                  <span class="pill-title">Available</span>
+                </div>
+                <div class="status-pill-box occupied">
+                  <span class="pill-number">{{ stats?.occupiedRooms || 0 }}</span>
+                  <span class="pill-title">Booked / Occupied</span>
+                </div>
+                <div class="status-pill-box maintenance">
+                  <span class="pill-number">{{ stats?.maintenanceRooms || 0 }}</span>
+                  <span class="pill-title">Maintenance</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Revenue by Category -->
+            <div class="analytics-card">
+              <h2 class="card-heading">Revenue by Category</h2>
+              <div class="category-breakdown">
+                <div class="category-item">
+                  <div class="cat-header">
+                    <span>Standard Rooms</span>
+                    <span class="gold-bold">{{ formatCurrency(stats?.revenueByRoomType?.['Standard']) }}</span>
+                  </div>
+                </div>
+                <div class="category-item">
+                  <div class="cat-header">
+                    <span>Deluxe Rooms</span>
+                    <span class="gold-bold">{{ formatCurrency(stats?.revenueByRoomType?.['Deluxe']) }}</span>
+                  </div>
+                </div>
+                <div class="category-item">
+                  <div class="cat-header">
+                    <span>Luxury Suites</span>
+                    <span class="gold-bold">{{ formatCurrency(stats?.revenueByRoomType?.['Suite']) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Bookings Quick Table -->
+          <div class="table-card">
+            <div class="table-card-header">
+              <h2 class="card-heading">Latest Reservations</h2>
+              <button class="btn-link-action" (click)="setSection('reservations')">View All Reservations &rarr;</button>
+            </div>
+            
+            <div class="table-responsive">
+              <table class="luxury-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Guest</th>
+                    <th>Room</th>
+                    <th>Check In</th>
+                    <th>Check Out</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (b of stats?.recentBookings; track b.bookingId) {
+                    <tr>
+                      <td class="bold-gold">#{{ b.bookingId }}</td>
+                      <td>
+                        <div class="guest-cell">
+                          <span class="guest-name">{{ b.customerName }}</span>
+                          <span class="guest-sub">{{ b.customerEmail }}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span class="room-pill">{{ b.roomNumber }} • {{ b.roomType }}</span>
+                      </td>
+                      <td>{{ b.checkIn }}</td>
+                      <td>{{ b.checkOut }}</td>
+                      <td class="bold-text">{{ formatCurrency(b.totalAmount) }}</td>
+                      <td>
+                        <span class="status-badge" [ngClass]="b.bookingStatus.toLowerCase()">
+                          {{ b.bookingStatus }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="payment-badge" [ngClass]="b.paymentStatus.toLowerCase()">
+                          {{ b.paymentStatus }} ({{ b.paymentMethod }})
+                        </span>
+                      </td>
+                    </tr>
+                  } @empty {
+                    <tr>
+                      <td colspan="8" class="text-center py-4 text-muted">No reservations recorded yet.</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- ================= 2. RESERVATIONS ================= -->
+      @if (currentSection === 'reservations') {
+        <div class="section-container">
+          <div class="section-header">
+            <div>
+              <h1 class="page-title">Reservations Management</h1>
+              <p class="page-subtitle">Browse, filter, and transition hotel guest bookings</p>
+            </div>
+          </div>
+
+          <!-- Controls Bar -->
+          <div class="filter-controls-card">
+            <div class="search-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input
+                type="text"
+                [(ngModel)]="bookingSearch"
+                (ngModelChange)="onBookingSearchChange()"
+                placeholder="Search by ID, guest name, email, phone, room number..."
+                class="search-input"
+              />
+            </div>
+
+            <!-- Status Filter Pills -->
+            <div class="filter-pills">
+              <button
+                class="pill-btn"
+                [class.active]="bookingStatusFilter === 'ALL'"
+                (click)="setBookingStatusFilter('ALL')"
+              >All</button>
+              <button
+                class="pill-btn"
+                [class.active]="bookingStatusFilter === 'CONFIRMED'"
+                (click)="setBookingStatusFilter('CONFIRMED')"
+              >Confirmed</button>
+              <button
+                class="pill-btn"
+                [class.active]="bookingStatusFilter === 'CHECKED_IN'"
+                (click)="setBookingStatusFilter('CHECKED_IN')"
+              >Checked In</button>
+              <button
+                class="pill-btn"
+                [class.active]="bookingStatusFilter === 'CHECKED_OUT'"
+                (click)="setBookingStatusFilter('CHECKED_OUT')"
+              >Checked Out</button>
+              <button
+                class="pill-btn"
+                [class.active]="bookingStatusFilter === 'CANCELLED'"
+                (click)="setBookingStatusFilter('CANCELLED')"
+              >Cancelled</button>
+            </div>
+          </div>
+
+          <!-- Data Table -->
+          <div class="table-card">
+            <div class="table-responsive">
+              <table class="luxury-table">
+                <thead>
+                  <tr>
+                    <th>Booking ID</th>
+                    <th>Guest Details</th>
+                    <th>Room</th>
+                    <th>Stay Dates</th>
+                    <th>Nights / Guests</th>
+                    <th>Total (INR)</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (b of bookings; track b.bookingId) {
+                    <tr>
+                      <td class="bold-gold">#{{ b.bookingId }}</td>
+                      <td>
+                        <div class="guest-cell">
+                          <span class="guest-name">{{ b.customerName }}</span>
+                          <span class="guest-sub">{{ b.customerEmail }}</span>
+                          <span class="guest-phone">{{ b.customerPhone }}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span class="room-pill">{{ b.roomNumber }} ({{ b.roomType }})</span>
+                      </td>
+                      <td>
+                        <div class="date-cell">
+                          <span><strong>In:</strong> {{ b.checkIn }}</span>
+                          <span><strong>Out:</strong> {{ b.checkOut }}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span>{{ b.numberOfNights }} night{{ b.numberOfNights > 1 ? 's' : '' }}</span><br/>
+                        <small class="text-muted">{{ b.numberOfGuests }} guest{{ b.numberOfGuests > 1 ? 's' : '' }}</small>
+                      </td>
+                      <td class="bold-text">{{ formatCurrency(b.totalAmount) }}</td>
+                      <td>
+                        <span class="status-badge" [ngClass]="b.bookingStatus.toLowerCase()">
+                          {{ b.bookingStatus }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="payment-badge" [ngClass]="b.paymentStatus.toLowerCase()">
+                          {{ b.paymentStatus }}
+                        </span>
+                        <div class="text-muted-xs">{{ b.paymentMethod }}</div>
+                      </td>
+                      <td>
+                        <button class="btn-action-status" (click)="openBookingStatusModal(b)">
+                          Update Status
+                        </button>
+                      </td>
+                    </tr>
+                  } @empty {
+                    <tr>
+                      <td colspan="9" class="text-center py-4 text-muted">
+                        No bookings match the search or filter criteria.
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination Bar -->
+            <div class="pagination-bar">
+              <span class="page-info">
+                Showing {{ bookings.length }} of {{ bookingTotalElements }} bookings (Page {{ bookingPage + 1 }} of {{ bookingTotalPages || 1 }})
+              </span>
+              <div class="pagination-btns">
+                <button [disabled]="bookingPage === 0" (click)="goToBookingPage(bookingPage - 1)" class="btn-page">&larr; Prev</button>
+                <button [disabled]="bookingPage + 1 >= bookingTotalPages" (click)="goToBookingPage(bookingPage + 1)" class="btn-page">Next &rarr;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- ================= 3. CUSTOMERS ================= -->
+      @if (currentSection === 'customers') {
+        <div class="section-container">
+          <div class="section-header">
+            <div>
+              <h1 class="page-title">Guest Registry</h1>
+              <p class="page-subtitle">Directory of registered hotel guests, reservations, and lifetime value</p>
+            </div>
+          </div>
+
+          <!-- Controls Bar -->
+          <div class="filter-controls-card">
+            <div class="search-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input
+                type="text"
+                [(ngModel)]="customerSearch"
+                (ngModelChange)="onCustomerSearchChange()"
+                placeholder="Search guests by name, email, or telephone number..."
+                class="search-input"
+              />
+            </div>
+          </div>
+
+          <!-- Data Table -->
+          <div class="table-card">
+            <div class="table-responsive">
+              <table class="luxury-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Guest Name</th>
+                    <th>Email Address</th>
+                    <th>Telephone</th>
+                    <th>ID Proof / Address</th>
+                    <th>Total Bookings</th>
+                    <th>Lifetime Spend</th>
+                    <th>Registered On</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (c of customers; track c.customerId) {
+                    <tr>
+                      <td class="bold-gold">#{{ c.customerId }}</td>
+                      <td class="guest-name-cell">{{ c.name }}</td>
+                      <td>{{ c.email }}</td>
+                      <td>{{ c.phone }}</td>
+                      <td>
+                        <span class="id-proof-text">{{ c.idProof || 'Not Provided' }}</span>
+                        @if (c.address) {
+                          <div class="text-muted-xs">{{ c.address }}</div>
+                        }
+                      </td>
+                      <td>
+                        <span class="counter-badge">{{ c.totalBookings }} booking{{ c.totalBookings !== 1 ? 's' : '' }}</span>
+                      </td>
+                      <td class="bold-gold">{{ formatCurrency(c.totalSpent) }}</td>
+                      <td class="text-muted">{{ c.createdAt ? (c.createdAt | date:'mediumDate') : '—' }}</td>
+                    </tr>
+                  } @empty {
+                    <tr>
+                      <td colspan="8" class="text-center py-4 text-muted">
+                        No guest profiles match your query.
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination Bar -->
+            <div class="pagination-bar">
+              <span class="page-info">
+                Showing {{ customers.length }} of {{ customerTotalElements }} guests (Page {{ customerPage + 1 }} of {{ customerTotalPages || 1 }})
+              </span>
+              <div class="pagination-btns">
+                <button [disabled]="customerPage === 0" (click)="goToCustomerPage(customerPage - 1)" class="btn-page">&larr; Prev</button>
+                <button [disabled]="customerPage + 1 >= customerTotalPages" (click)="goToCustomerPage(customerPage + 1)" class="btn-page">Next &rarr;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- ================= 4. ROOMS ================= -->
+      @if (currentSection === 'rooms') {
+        <div class="section-container">
+          <div class="section-header">
+            <div>
+              <h1 class="page-title">Rooms Inventory Catalogue</h1>
+              <p class="page-subtitle">Manage room rates, physical occupancy, and maintenance states</p>
+            </div>
+          </div>
+
+          <!-- Controls Bar -->
+          <div class="filter-controls-card">
+            <div class="search-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input
+                type="text"
+                [(ngModel)]="roomSearch"
+                (ngModelChange)="onRoomSearchChange()"
+                placeholder="Search room number (e.g. 101, 202, 301)..."
+                class="search-input"
+              />
+            </div>
+
+            <!-- Type Filter -->
+            <div class="filter-pills">
+              <button class="pill-btn" [class.active]="roomTypeFilter === 'ALL'" (click)="setRoomTypeFilter('ALL')">All Types</button>
+              <button class="pill-btn" [class.active]="roomTypeFilter === 'Standard'" (click)="setRoomTypeFilter('Standard')">Standard</button>
+              <button class="pill-btn" [class.active]="roomTypeFilter === 'Deluxe'" (click)="setRoomTypeFilter('Deluxe')">Deluxe</button>
+              <button class="pill-btn" [class.active]="roomTypeFilter === 'Suite'" (click)="setRoomTypeFilter('Suite')">Suite</button>
+            </div>
+
+            <!-- Status Filter -->
+            <div class="filter-pills">
+              <button class="pill-btn" [class.active]="roomStatusFilter === 'ALL'" (click)="setRoomStatusFilter('ALL')">All Status</button>
+              <button class="pill-btn" [class.active]="roomStatusFilter === 'AVAILABLE'" (click)="setRoomStatusFilter('AVAILABLE')">Available</button>
+              <button class="pill-btn" [class.active]="roomStatusFilter === 'OCCUPIED'" (click)="setRoomStatusFilter('OCCUPIED')">Occupied</button>
+              <button class="pill-btn" [class.active]="roomStatusFilter === 'MAINTENANCE'" (click)="setRoomStatusFilter('MAINTENANCE')">Maintenance</button>
+            </div>
+          </div>
+
+          <!-- Data Table -->
+          <div class="table-card">
+            <div class="table-responsive">
+              <table class="luxury-table">
+                <thead>
+                  <tr>
+                    <th>Room #</th>
+                    <th>Category</th>
+                    <th>Max Guests</th>
+                    <th>Price / Night</th>
+                    <th>Current Status</th>
+                    <th>Quick Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (r of rooms; track r.roomId) {
+                    <tr>
+                      <td class="bold-gold room-number-td">Room {{ r.roomNumber }}</td>
+                      <td>
+                        <span class="room-pill">{{ r.roomType }}</span>
+                      </td>
+                      <td>Up to {{ r.capacity }} Guests</td>
+                      <td class="bold-text">
+                        {{ formatCurrency(r.pricePerNight) }}
+                        <button class="btn-inline-edit" (click)="openEditPriceModal(r)" title="Edit Price">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="edit-icon">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                          </svg>
+                        </button>
+                      </td>
+                      <td>
+                        <span class="room-status-badge" [ngClass]="r.status.toLowerCase()">
+                          {{ r.status }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="quick-btn-group">
+                          @if (r.status !== 'AVAILABLE') {
+                            <button class="btn-sm green" (click)="updateRoomStatusQuick(r, 'AVAILABLE')">Set Available</button>
+                          }
+                          @if (r.status !== 'MAINTENANCE') {
+                            <button class="btn-sm orange" (click)="updateRoomStatusQuick(r, 'MAINTENANCE')">Maintenance</button>
+                          }
+                          @if (r.status === 'AVAILABLE') {
+                            <button class="btn-sm blue" (click)="updateRoomStatusQuick(r, 'OCCUPIED')">Set Occupied</button>
+                          }
+                        </div>
+                      </td>
+                    </tr>
+                  } @empty {
+                    <tr>
+                      <td colspan="6" class="text-center py-4 text-muted">
+                        No rooms match the criteria.
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination Bar -->
+            <div class="pagination-bar">
+              <span class="page-info">
+                Showing {{ rooms.length }} of {{ roomTotalElements }} rooms (Page {{ roomPage + 1 }} of {{ roomTotalPages || 1 }})
+              </span>
+              <div class="pagination-btns">
+                <button [disabled]="roomPage === 0" (click)="goToRoomPage(roomPage - 1)" class="btn-page">&larr; Prev</button>
+                <button [disabled]="roomPage + 1 >= roomTotalPages" (click)="goToRoomPage(roomPage + 1)" class="btn-page">Next &rarr;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- ================= 5. PAYMENTS ================= -->
+      @if (currentSection === 'payments') {
+        <div class="section-container">
+          <div class="section-header">
+            <div>
+              <h1 class="page-title">Financial &amp; Payments Audit</h1>
+              <p class="page-subtitle">Verifiable transaction logs generated from customer bookings</p>
+            </div>
+          </div>
+
+          <!-- Controls Bar -->
+          <div class="filter-controls-card">
+            <div class="search-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input
+                type="text"
+                [(ngModel)]="paymentSearch"
+                (ngModelChange)="onPaymentSearchChange()"
+                placeholder="Search transaction by ID, booking ID, or guest name..."
+                class="search-input"
+              />
+            </div>
+
+            <!-- Status Filter -->
+            <div class="filter-pills">
+              <button class="pill-btn" [class.active]="paymentStatusFilter === 'ALL'" (click)="setPaymentStatusFilter('ALL')">All Status</button>
+              <button class="pill-btn" [class.active]="paymentStatusFilter === 'PAID'" (click)="setPaymentStatusFilter('PAID')">Paid</button>
+              <button class="pill-btn" [class.active]="paymentStatusFilter === 'PENDING'" (click)="setPaymentStatusFilter('PENDING')">Pending</button>
+            </div>
+
+            <!-- Method Filter -->
+            <div class="filter-pills">
+              <button class="pill-btn" [class.active]="paymentMethodFilter === 'ALL'" (click)="setPaymentMethodFilter('ALL')">All Methods</button>
+              <button class="pill-btn" [class.active]="paymentMethodFilter === 'UPI'" (click)="setPaymentMethodFilter('UPI')">UPI</button>
+              <button class="pill-btn" [class.active]="paymentMethodFilter === 'Card'" (click)="setPaymentMethodFilter('Card')">Card</button>
+              <button class="pill-btn" [class.active]="paymentMethodFilter === 'Cash'" (click)="setPaymentMethodFilter('Cash')">Cash</button>
+            </div>
+          </div>
+
+          <!-- Data Table -->
+          <div class="table-card">
+            <div class="table-responsive">
+              <table class="luxury-table">
+                <thead>
+                  <tr>
+                    <th>Tx ID</th>
+                    <th>Booking #</th>
+                    <th>Guest Name</th>
+                    <th>Room</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Status</th>
+                    <th>Transaction Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (p of payments; track p.paymentId) {
+                    <tr>
+                      <td class="bold-gold">#TX-{{ p.paymentId }}</td>
+                      <td class="bold-text">
+                        <button class="btn-link-action" (click)="bookingSearch = '' + p.bookingId; setSection('reservations')">
+                          #{{ p.bookingId }}
+                        </button>
+                      </td>
+                      <td>
+                        <div class="guest-cell">
+                          <span class="guest-name">{{ p.customerName || 'Direct Booking' }}</span>
+                          <span class="guest-sub">{{ p.customerEmail }}</span>
+                        </div>
+                      </td>
+                      <td>{{ p.roomNumber ? ('Room ' + p.roomNumber) : '—' }}</td>
+                      <td class="bold-text price-col">{{ formatCurrency(p.amount) }}</td>
+                      <td>
+                        <span class="method-badge">{{ p.paymentMethod }}</span>
+                      </td>
+                      <td>
+                        <span class="payment-badge" [ngClass]="p.paymentStatus.toLowerCase()">
+                          {{ p.paymentStatus }}
+                        </span>
+                      </td>
+                      <td class="text-muted">{{ p.paymentDate }}</td>
+                    </tr>
+                  } @empty {
+                    <tr>
+                      <td colspan="8" class="text-center py-4 text-muted">
+                        No transactions found matching your criteria.
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination Bar -->
+            <div class="pagination-bar">
+              <span class="page-info">
+                Showing {{ payments.length }} of {{ paymentTotalElements }} transactions (Page {{ paymentPage + 1 }} of {{ paymentTotalPages || 1 }})
+              </span>
+              <div class="pagination-btns">
+                <button [disabled]="paymentPage === 0" (click)="goToPaymentPage(paymentPage - 1)" class="btn-page">&larr; Prev</button>
+                <button [disabled]="paymentPage + 1 >= paymentTotalPages" (click)="goToPaymentPage(paymentPage + 1)" class="btn-page">Next &rarr;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+    </main>
+  </div>
+
+  <!-- ================= MODAL: UPDATE BOOKING STATUS ================= -->
+  @if (selectedBookingForStatus) {
+    <div class="modal-backdrop" (click)="closeBookingStatusModal()">
+      <div class="luxury-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3 class="modal-title">Update Reservation #{{ selectedBookingForStatus.bookingId }}</h3>
+          <button class="modal-close-btn" (click)="closeBookingStatusModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-guest-line">
+            Guest: <strong>{{ selectedBookingForStatus.customerName }}</strong> • Room: <strong>{{ selectedBookingForStatus.roomNumber }}</strong>
+          </p>
+          <div class="form-group-modal">
+            <label for="statusSelect">Select New Reservation Status:</label>
+            <select id="statusSelect" [(ngModel)]="newBookingStatus" class="luxury-select">
+              <option value="CONFIRMED">CONFIRMED (Booking locked, guest yet to arrive)</option>
+              <option value="CHECKED_IN">CHECKED_IN (Guest arrived, room set to OCCUPIED)</option>
+              <option value="CHECKED_OUT">CHECKED_OUT (Guest departed, room returned to AVAILABLE)</option>
+              <option value="CANCELLED">CANCELLED (Reservation released, room returned to AVAILABLE)</option>
+            </select>
+          </div>
+          <p class="modal-tip">
+            Updating to <em>CHECKED_IN</em> will immediately mark Room {{ selectedBookingForStatus.roomNumber }} as OCCUPIED.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-modal-cancel" (click)="closeBookingStatusModal()">Cancel</button>
+          <button class="btn-modal-save" (click)="saveBookingStatus()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ================= MODAL: EDIT ROOM PRICE ================= -->
+  @if (editingRoom) {
+    <div class="modal-backdrop" (click)="closeEditPriceModal()">
+      <div class="luxury-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3 class="modal-title">Update Rate for Room {{ editingRoom.roomNumber }}</h3>
+          <button class="modal-close-btn" (click)="closeEditPriceModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-guest-line">
+            Category: <strong>{{ editingRoom.roomType }}</strong> (Max {{ editingRoom.capacity }} Guests)
+          </p>
+          <div class="form-group-modal">
+            <label for="roomPriceInput">Price Per Night (INR ₹):</label>
+            <input
+              type="number"
+              id="roomPriceInput"
+              [(ngModel)]="newRoomPrice"
+              min="500"
+              step="100"
+              class="luxury-select"
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-modal-cancel" (click)="closeEditPriceModal()">Cancel</button>
+          <button class="btn-modal-save" (click)="saveRoomPrice()">Update Room Rate</button>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>
