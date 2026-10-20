@@ -42,8 +42,4 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
-# Spring Boot configuration containing environment-variable references
 
-# Generated Maven build output
-backend/target/
-backend/src/main/resources/application.properties
