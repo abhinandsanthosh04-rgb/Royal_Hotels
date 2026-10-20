@@ -491,7 +491,7 @@ export class AdminLoginComponent {
         if (err.status === 401) {
           this.errorMessage = 'Invalid username or password.';
         } else if (err.status === 0) {
-          this.errorMessage = 'Backend server unreachable. Ensure Spring Boot is running on port 8080.';
+          this.errorMessage = 'Backend server unreachable. Please verify the backend service is running and CORS is enabled.';
         } else {
           this.errorMessage = err.error?.message || 'Authentication failed. Please try again.';
         }

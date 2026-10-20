@@ -2,6 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 export interface AdminUser {
   username: string;
@@ -24,7 +25,7 @@ export interface AdminLoginResponse {
   providedIn: 'root'
 })
 export class AdminAuthService {
-  private readonly baseUrl = 'http://localhost:8080/api/admin/auth';
+  private readonly baseUrl = `${environment.apiUrl}/admin/auth`;
   private readonly tokenKey = 'royal_hotels_admin_token';
   private readonly userKey = 'royal_hotels_admin_user';
 

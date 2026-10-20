@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 /**
  * BookingRequest - Exact payload expected by the Java Spring Boot backend (BookingRequest.java).
@@ -47,13 +48,13 @@ export interface BookingResponse {
 })
 export class BookingService {
 
-  private readonly apiBase = 'http://localhost:8080/api';
+  private readonly apiBase = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   /**
-   * Submit a new reservation to the Java Spring Boot backend.
-   * Calls: POST http://localhost:8080/api/bookings
+   * Submit a new reservation to the Spring Boot backend.
+   * Calls: POST /api/bookings
    */
   createBooking(request: BookingRequest): Observable<BookingResponse> {
     return this.http.post<BookingResponse>(`${this.apiBase}/bookings`, request);
@@ -61,7 +62,7 @@ export class BookingService {
 
   /**
    * Retrieve a booking by its primary key ID.
-   * Calls: GET http://localhost:8080/api/bookings/{id}
+   * Calls: GET /api/bookings/{id}
    */
   getBookingById(bookingId: number): Observable<BookingResponse> {
     return this.http.get<BookingResponse>(`${this.apiBase}/bookings/${bookingId}`);

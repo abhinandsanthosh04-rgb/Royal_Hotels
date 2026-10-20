@@ -8,11 +8,7 @@
 -- ============================================================
 
 -- Step 1: Create and open the database
-CREATE DATABASE IF NOT EXISTS royal_hotels
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci;
-
-USE royal_hotels;
+USE defaultdb;
 
 -- ============================================================
 -- TABLE 1: customers

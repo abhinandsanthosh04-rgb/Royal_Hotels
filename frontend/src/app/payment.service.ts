@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 export interface PaymentRequest {
   bookingId: number;
@@ -32,13 +33,13 @@ export interface PaymentResponse {
 })
 export class PaymentService {
 
-  private readonly apiBase = 'http://localhost:8080/api';
+  private readonly apiBase = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   /**
    * Process a demo payment for an existing booking.
-   * Calls: POST http://localhost:8080/api/payments
+   * Calls: POST /api/payments
    */
   processPayment(request: PaymentRequest): Observable<PaymentResponse> {
     return this.http.post<PaymentResponse>(`${this.apiBase}/payments`, request);
@@ -46,7 +47,7 @@ export class PaymentService {
 
   /**
    * Retrieve payment records for a booking.
-   * Calls: GET http://localhost:8080/api/payments/booking/{bookingId}
+   * Calls: GET /api/payments/booking/{bookingId}
    */
   getPaymentsByBookingId(bookingId: number): Observable<PaymentResponse[]> {
     return this.http.get<PaymentResponse[]>(`${this.apiBase}/payments/booking/${bookingId}`);

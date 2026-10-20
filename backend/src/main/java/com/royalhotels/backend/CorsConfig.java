@@ -23,9 +23,17 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")       // Apply to all /api/ endpoints
-                        .allowedOrigins("http://localhost:4200") // Angular dev server
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders("*");
+                        .allowedOriginPatterns(
+                                "http://localhost:4200",
+                                "http://127.0.0.1:4200",
+                                "http://localhost:*",
+                                "https://*.vercel.app",
+                                "https://vercel.app",
+                                "https://*.onrender.com"
+                        )
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }

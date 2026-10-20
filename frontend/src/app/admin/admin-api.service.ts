@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AdminAuthService } from './admin-auth.service';
+import { environment } from '../../environments/environment';
 
 export interface PageResponse<T> {
   content: T[];
@@ -89,7 +90,7 @@ export interface AdminPaymentItem {
   providedIn: 'root'
 })
 export class AdminApiService {
-  private readonly baseUrl = 'http://localhost:8080/api/admin';
+  private readonly baseUrl = `${environment.apiUrl}/admin`;
 
   constructor(private http: HttpClient, private authService: AdminAuthService) {}
 

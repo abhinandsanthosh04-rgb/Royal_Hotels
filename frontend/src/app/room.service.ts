@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 /**
  * ApiRoom - matches the JSON shape returned by the Java backend.
@@ -40,24 +41,23 @@ export interface AvailableRoomResponse {
 }
 
 /**
- * RoomService - communicates with the Java Spring Boot backend.
+ * RoomService - communicates with the Spring Boot backend.
  *
  * It uses Angular's HttpClient to make HTTP GET requests.
- * The backend must be running at http://localhost:8080 for these to work.
  */
 @Injectable({
   providedIn: 'root'
 })
 export class RoomService {
 
-  /** Base URL of the Java Spring Boot backend */
-  private readonly apiBase = 'http://localhost:8080/api';
+  /** Base URL of the Spring Boot backend */
+  private readonly apiBase = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   /**
    * Fetch ALL rooms from the database regardless of status.
-   * Calls: GET http://localhost:8080/api/rooms
+   * Calls: GET /api/rooms
    */
   getAllRooms(): Observable<ApiRoom[]> {
     return this.http.get<ApiRoom[]>(`${this.apiBase}/rooms`);
@@ -65,7 +65,7 @@ export class RoomService {
 
   /**
    * Fetch only AVAILABLE rooms from the database.
-   * Calls: GET http://localhost:8080/api/rooms/available
+   * Calls: GET /api/rooms/available
    */
   getAvailableRooms(): Observable<ApiRoom[]> {
     return this.http.get<ApiRoom[]>(`${this.apiBase}/rooms/available`);

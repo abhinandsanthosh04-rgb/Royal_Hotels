@@ -6,6 +6,7 @@ import { RoomService, ApiRoom, AvailableRoomResponse } from './room.service';
 import { BookingService, BookingRequest, BookingResponse } from './booking.service';
 import { PaymentService, PaymentRequest, PaymentResponse } from './payment.service';
 import { finalize, filter } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 export interface Room {
   id: string;
@@ -228,7 +229,7 @@ export class App implements OnInit {
           console.error('[RoomService] Failed to load rooms:', err);
           this.roomsError =
             'Unable to load rooms from the backend. ' +
-            'Ensure the Spring Boot server is running at http://localhost:8080.';
+            `Ensure the backend server is reachable at ${environment.apiUrl}.`;
           this.cdr.markForCheck();
         }
       });
@@ -486,7 +487,7 @@ export class App implements OnInit {
               'Invalid reservation details. Please check your dates and guest information.';
           } else if (err.status === 0) {
             this.bookingError =
-              'Unable to connect to the backend server. Please verify the Spring Boot application is running at http://localhost:8080.';
+              `Unable to connect to the backend server. Please verify the application is reachable at ${environment.apiUrl}.`;
           } else {
             this.bookingError = err.error?.message ||
               'An unexpected error occurred while processing your booking. Please try again.';
@@ -555,7 +556,7 @@ export class App implements OnInit {
               'Invalid payment request details.';
           } else if (err.status === 0) {
             this.paymentError =
-              'Unable to reach payment server. Please verify the Spring Boot backend is running at http://localhost:8080.';
+              `Unable to reach payment server. Please verify the backend is reachable at ${environment.apiUrl}.`;
           } else {
             this.paymentError = err.error?.message ||
               'Payment processing error occurred. Please try again.';
@@ -629,7 +630,7 @@ export class App implements OnInit {
           console.error('[Availability] API error:', err);
           this.availabilityError =
             err.error?.message ||
-            'Could not fetch availability. Ensure the Spring Boot server is running at http://localhost:8080.';
+            `Could not fetch availability. Ensure the server is reachable at ${environment.apiUrl}.`;
           this.searchResultMessage = null;
           this.cdr.markForCheck();
         }
