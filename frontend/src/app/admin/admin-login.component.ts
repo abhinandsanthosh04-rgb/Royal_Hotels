@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AdminAuthService, AdminLoginResponse } from './admin-auth.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-admin-login',
@@ -477,19 +478,22 @@ export class AdminLoginComponent {
     this.authService.login({
       username: this.username.trim(),
       password: this.password
-    }).subscribe({
+    }).pipe(
+      // Ensure loading flag is cleared regardless of outcome
+      finalize(() => this.isLoading = false)
+    ).subscribe({
       next: (response) => {
-        this.isLoading = false;
         if (response.success) {
           this.router.navigate(['/admin/dashboard']);
         } else {
-          this.errorMessage = response.message || 'Authentication failed. Please verify credentials.';
+          // Show backend-provided error message when available
+          this.errorMessage = response.message || 'Invalid administrator credentials.';
         }
       },
       error: (err) => {
-        this.isLoading = false;
+        // Network or server errors – display a helpful message
         if (err.status === 401) {
-          this.errorMessage = 'Invalid username or password.';
+          this.errorMessage = err.error?.message || 'Invalid administrator credentials.';
         } else if (err.status === 0) {
           this.errorMessage = 'Backend server unreachable. Please verify the backend service is running and CORS is enabled.';
         } else {
@@ -498,4 +502,5 @@ export class AdminLoginComponent {
       }
     });
   }
+
 }
